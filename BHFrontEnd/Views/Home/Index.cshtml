@@ -1,0 +1,128 @@
+﻿@using BHFrontEnd.Data
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Home page";
+}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="row">
+        <div class="col-3">
+            <div class="mb-3">
+                <label for="FirstName" class="form-label">First Name: </label>
+                <label id="FirstName" class="fw-bold">@UserManager.Users.Where(x=>x.Id==User.Claims.First().Value).FirstOrDefault().firstName</label>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="mb-3">
+                <label for="LastName" class="form-label">Last Name: </label>
+                <label id="LastName" class="fw-bold">@UserManager.Users.Where(x=>x.Id==User.Claims.First().Value).FirstOrDefault().lastName</label>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="mb-3">
+                <label for="Balance" class="form-label">Balance: </label>
+                <label id="Balance" class="fw-bold">...</label>
+            </div>
+        </div>
+        <div class="col-2 offset-1">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#TransactionModal">New Transaction</button>
+        </div>
+        <div class="col-12">
+            <table id="transactionsTable" class="display">
+                <thead>
+                    <tr>
+                        <th>Amount</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+
+            </table>
+        </div>
+
+    </div>
+    <div class="modal fade" id="TransactionModal" tabindex="-1" aria-labelledby="TransactionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="TransactionModal">New Transaction</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="TransactionAmount" class="form-label">Enter Transaction Amount</label>
+                        <input type="number" class="form-control" id="TransactionAmount" value="100">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="SaveTransaction">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @section Scripts
+    {
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+    <script>
+
+        var userTransactions;
+        var transactionsView;
+        $(document).ready(function () {
+            $.get("https://bhbackendapimanagement.azure-api.net/api/Transactions/" + "@User.Claims.First().Value", function (res) {
+                $("#Balance").html(res.balance);
+                userTransactions = res.data;
+                transactionsView = $('#transactionsTable').DataTable({
+                    processing: true,
+                    data: userTransactions,
+                    columns: [
+                        { data: "initialCredit" },
+                        { data: "transactionDate" }
+
+                    ]
+                });
+            });
+           
+
+        });
+        
+        $("#SaveTransaction").click(function () {
+            data = '{"UserId":"@User.Claims.First().Value","Credit":' + $("#TransactionAmount").val() + '}';
+            $.ajax({
+                url: "https://bhfrontend.azurewebsites.net/api/Transction",
+                type: "POST",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Content-Type", "application/json");
+                    xhr.setRequestHeader("Accept", "application/json");
+                },
+                data: data,
+                dataType: "json"
+            }).always(function () {
+                setTimeout(function () {
+                    $.get("https://bhbackendapimanagement.azure-api.net/api/Transactions/" + "@User.Claims.First().Value", function (res) {
+                        $("#Balance").html(res.balance);
+                        userTransactions = res.data;
+                        transactionsView.clear();
+                        transactionsView.rows.add(userTransactions).draw();
+                    });
+                    }
+                    , 1000);
+                    
+            });
+            $("#TransactionModal").modal('hide');
+        });
+    </script>
+   }
+}
+else
+{
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <h3>Please login to start!</h3>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>
+}

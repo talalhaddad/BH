@@ -1,0 +1,77 @@
+﻿@page
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="row">
+        <div class="col-3">
+            <div class="mb-3">
+                <label for="userName" class="form-label">First Name: </label>
+                <label id="userName" class="fw-bold">Talal</label>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="mb-3">
+                <label for="userName" class="form-label">Last Name: </label>
+                <label id="userName" class="fw-bold">Haddad</label>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="mb-3">
+                <label for="userName" class="form-label">Balance: </label>
+                <label id="userName" class="fw-bold">500</label>
+            </div>
+        </div>
+        <div class="col-2 offset-1">
+            <button type="button" class="btn btn-primary">New Transaction</button>
+        </div>
+        <div class="col-12">
+            <table id="transactionsTable" class="display">
+                <thead>
+                    <tr>
+                        <th>Amount</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+               
+            </table>
+        </div>
+
+    </div>
+    
+   @section Scripts
+   {
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+       <script>
+        $('#transactionsTable').DataTable({
+            ajax: {
+                url: 'https://bhbackendapimanagement.azure-api.net/api/Transactions/' + "@UserManager.GetUserId(HttpContext.User).ToString()",
+                dataSrc: '',
+                columns: [
+                    { data: "initialCredit" },
+                    { data: "transactionDate" }
+                    
+                ]
+            },
+        });
+       </script>
+   }
+}
+else
+{
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <h3>Please login to start!</h3>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>
+}
+
