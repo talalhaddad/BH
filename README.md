@@ -13,9 +13,9 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 <a href="https://github.com/talalhaddad/BH">
-    <img src="drawing1.jpg" alt="design" >
+    <img src="Drawing1.jpg" alt="design" >
   </a>
-
+ <img src="Drawing1.jpg" alt="design" >
 This project explains how I would implement a front end app connected to the backend API, performing transcations for the logged in user, utilizing messaging solutions (Service Bus) to maintain transactions, process them using Azure Function app, and adding the data to Azure SQL.
 
 for the backend API, we have APIM to organize the API endpoints, and to add more security like Auth policies.
