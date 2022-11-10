@@ -10,27 +10,11 @@
 -->
 
 
-
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <a href="https://github.com/github_username/repo_name">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
-
-<h3 align="center">project_title</h3>
-
-  <p align="center">
-    project_description
-    
-</div>
-
-
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<a href="https://github.com/talalhaddad/BH">
+    <img src="images/drawing1.jpg" alt="design" >
+  </a>
 
 This project explains how I would implement a front end app connected to the backend API, performing transcations for the logged in user, utilizing messaging solutions (Service Bus) to maintain transactions, process them using Azure Function app, and adding the data to Azure SQL.
 
@@ -42,7 +26,7 @@ for the backend API, we have APIM to organize the API endpoints, and to add more
 <!-- CONTACT -->
 ## Demo
 
-Demo Link: [[https://github.com/github_username/repo_name](https://bhfrontend.azurewebsites.net)]([https://github.com/github_username/repo_name](https://bhfrontend.azurewebsites.net))
+Demo Link: [https://bhfrontend.azurewebsites.net]
 
 You can register and start adding trasactions.
 
